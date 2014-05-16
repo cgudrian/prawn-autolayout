@@ -17,9 +17,9 @@ Jeweler::Tasks.new do |gem|
   gem.name = "prawn-boxes"
   gem.homepage = "http://github.com/cgudrian/prawn-boxes"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
-  gem.email = "christian@gudrian.org"
+  gem.summary = %Q{Use nested boxes to layout PDF documents with Prawn.}
+  gem.description = %Q{cf. summary}
+  gem.email = "christian.gudrian@gmx.de"
   gem.authors = ["Christian Gudrian"]
   # dependencies defined in Gemfile
 end
