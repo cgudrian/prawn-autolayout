@@ -1,6 +1,7 @@
 require 'prawn'
 
 module Prawn
+
   class Document
 
     class ManagedBox
@@ -9,7 +10,7 @@ module Prawn
       end
     end
 
-    def managed_box(opts={}, &block)
+    def auto_layout(opts={}, &content_block)
 
     end
 
