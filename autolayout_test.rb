@@ -17,6 +17,34 @@ Prawn::Document.generate('boxtest.pdf') do
       stroke_bounds
     end
 
+    layout.frame do
+      stroke_bounds
+      layout.frame do
+        stroke_bounds
+      end
+      layout.frame do
+        stroke_bounds
+      end
+      layout.frame do
+        stroke_bounds
+      end
+      layout.frame do
+        stroke_bounds
+        layout.frame do
+          stroke_bounds
+        end
+        layout.frame do
+          stroke_bounds
+        end
+        layout.frame do
+          stroke_bounds
+        end
+        layout.frame do
+          stroke_bounds
+        end
+      end
+    end
+
   end
 end
 
