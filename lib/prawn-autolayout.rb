@@ -66,7 +66,7 @@ module Prawn
 
     class Engine
       def initialize(document, content_block)
-        @document = document
+        @document      = document
         @current_frame = create_root_frame
         content_block.call(self)
         @current_frame.layout(Bounds.for_document(document))
