@@ -3,6 +3,39 @@ require 'prawn'
 module Prawn
   module AutoLayout
 
+    class Bounds
+      attr_accessor :top, :left, :width, :height
+
+      def initialize(top, left, width, height)
+        @top, @left, @width, @height = top, left, width, height
+      end
+
+      def move_left
+        Bounds.new(@top, @left + @width, @width, @height)
+      end
+
+      def move_down
+        Bounds.new(@top - @height, @left, @width, @height)
+      end
+
+      def scale_width(factor)
+        Bounds.new(@top, @left, @width * factor, @height)
+      end
+
+      def reset_origin
+        Bounds.new(@height, 0, @width, @height)
+      end
+
+      def top_left
+        [left, top]
+      end
+
+      def self.for_document(document)
+        b = document.bounds
+        Bounds.new(b.top, b.left, b.width, b.height)
+      end
+    end
+
     class Frame
       def initialize(engine, opts, content_block)
         @engine        = engine
@@ -10,11 +43,10 @@ module Prawn
         @content_block = content_block
       end
 
-      def layout(top, left, width, height)
-        @engine.frame_context(self, top, left, width, height) do
+      def layout(bounds)
+        @engine.frame_context(self, bounds) do
           @content_block.call if @content_block
-          left, top = 0, height
-          layout_children(top, left, width, height) if @children.count
+          layout_children(bounds.reset_origin) if @children.count
         end
       end
 
@@ -22,37 +54,31 @@ module Prawn
         @children << frame
       end
 
-      def layout_children(top, left, width, height)
-        width = 1.0 * width / @children.count
+      def layout_children(bounds)
+        bounds = bounds.scale_width(1.0 / @children.count)
         @children.each do |c|
-          c.layout(top, left, width, height)
-          left += width
+          c.layout(bounds)
+          bounds = bounds.move_left
         end
       end
 
-      def set_current_frame(frame)
-        @engine.instance_eval { @current_frame = frame }
-      end
     end
 
     class Engine
       def initialize(document, content_block)
         @document = document
-
         @current_frame = create_root_frame
         content_block.call(self)
-
-        b = @document.bounds
-        @current_frame.layout(b.top, b.left, b.width, b.height)
+        @current_frame.layout(Bounds.for_document(document))
       end
 
       def frame(opts={}, &content_block)
         @current_frame.add_child(Frame.new(self, opts, content_block))
       end
 
-      def frame_context(frame, top, left, width, height)
+      def frame_context(frame, bounds)
         @current_frame = frame
-        @document.bounding_box([left, top], width: width, height: height) do
+        @document.bounding_box(bounds.top_left, width: bounds.width, height: bounds.height) do
           yield
         end
       end
