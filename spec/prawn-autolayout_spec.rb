@@ -57,7 +57,7 @@ describe 'Bounds', '.from_document' do
     b.top.should eq(1)
     b.left.should eq(2)
     b.width.should eq(3)
-    b.height.should eq(4)
+    b.height.should eq(49)
   end
 end
 

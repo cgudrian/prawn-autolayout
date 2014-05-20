@@ -8,8 +8,8 @@ group :development do
   gem "rspec", "~> 2.8"
   gem "yard", "~> 0.7"
   gem "rdoc", "~> 3.12"
-  gem "cucumber", ">= 0"
+  gem "cucumber", "~> 1.3"
   gem "bundler", "~> 1.0"
-  gem "jeweler", "~> 2.0.1"
-  gem "simplecov", ">= 0"
+  gem "jeweler", "~> 2.0", ">= 2.0.1"
+  gem "simplecov", "~> 0.8"
 end
