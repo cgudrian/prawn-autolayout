@@ -10,7 +10,7 @@ module Prawn
         @top, @left, @width, @height = top, left, width, height
       end
 
-      def move_left
+      def move_right
         Bounds.new(@top, @left + @width, @width, @height)
       end
 
@@ -58,7 +58,7 @@ module Prawn
         bounds = bounds.scale_width(1.0 / @children.count)
         @children.each do |c|
           c.layout(bounds)
-          bounds = bounds.move_left
+          bounds = bounds.move_right
         end
       end
 
