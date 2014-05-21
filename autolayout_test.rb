@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-require_relative 'lib/prawn-autolayout'
-
+require 'prawn'
 require 'prawn/measurement_extensions'
+require_relative 'lib/prawn-autolayout'
 
 Prawn::Document.generate('boxtest.pdf') do
 

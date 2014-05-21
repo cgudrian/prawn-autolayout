@@ -44,15 +44,18 @@ describe 'Bounds', '#top_left' do
   end
 end
 
+describe 'Bound', '#move_down' do
+  it 'should return a new Bounds instance shifted down by its height' do
+    b1 = Prawn::AutoLayout::Bounds.new(10, 2, 3, 4)
+    b2 = b1.move_down
+    b1.top.should eq(10)
+    b2.top.should eq(6)
+  end
+end
+
 describe 'Bounds', '.from_document' do
-  it 'should create an instance that fits the document''s bounds' do
-    doc = double('document')
-    bounds = double('bounds')
-    bounds.stub(:top).and_return(1)
-    bounds.stub(:left).and_return(2)
-    bounds.stub(:width).and_return(3)
-    bounds.stub(:height).and_return(4)
-    doc.stub(:bounds).and_return(bounds)
+  it 'should create an instance that according to the document''s bounds' do
+    doc = mock_document(1, 2, 3, 4)
     b = Prawn::AutoLayout::Bounds.for_document(doc)
     b.top.should eq(1)
     b.left.should eq(2)
@@ -61,7 +64,11 @@ describe 'Bounds', '.from_document' do
   end
 end
 
-describe 'AutoLayout' do
+describe 'Engine' do
   it 'should layout two frames evenly across the available width' do
+    document = mock_document(100, 0, 100, 100)
+    Prawn::AutoLayout::Engine.new(document) do
+
+    end
   end
 end

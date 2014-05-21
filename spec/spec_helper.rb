@@ -27,3 +27,14 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 RSpec.configure do |config|
 
 end
+
+def mock_document(top, left, width, height)
+  doc = double('document')
+  bounds = double('bounds')
+  bounds.stub(:top).and_return(top)
+  bounds.stub(:left).and_return(left)
+  bounds.stub(:width).and_return(width)
+  bounds.stub(:height).and_return(height)
+  doc.stub(:bounds).and_return(bounds)
+  doc
+end

@@ -1,7 +1,10 @@
+require_relative 'frame.rb'
+require_relative 'bounds.rb'
+
 module Prawn
   module AutoLayout
     class Engine
-      def initialize(document, content_block)
+      def initialize(document, &content_block)
         @document      = document
         @current_frame = create_root_frame
         content_block.call(self)
