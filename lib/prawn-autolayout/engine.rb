@@ -1,6 +1,3 @@
-require_relative 'frame.rb'
-require_relative 'bounds.rb'
-
 module Prawn
   module AutoLayout
     class Engine
