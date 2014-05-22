@@ -1,3 +1,5 @@
+require_relative 'frame'
+
 module Prawn
   module AutoLayout
     class Engine

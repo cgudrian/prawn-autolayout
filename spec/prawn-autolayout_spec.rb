@@ -1,111 +1,121 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe 'Bounds', '#initialize' do
-  it 'should initialize a Bounds instance' do
-    b = Prawn::AutoLayout::Bounds.new(1, 2, 3, 4)
-    b.left.should eq(1)
-    b.top.should eq(2)
-    b.width.should eq(3)
-    b.height.should eq(4)
-  end
-end
+module Prawn
+  module AutoLayout
 
-describe 'Bounds', '#reset_origin' do
-  it 'should return a new instance with the left coordinate set to 0 and the top coordinate set to the height' do
-    b1 = Prawn::AutoLayout::Bounds.new(1, 2, 3, 4)
-    b2 = b1.reset_origin
-    b2.left.should eq(0)
-    b2.top.should eq(4)
-  end
-end
+    describe Bounds do
 
-describe 'Bounds', '#scale_width' do
-  it 'should return a new instance with its width scaled by a factor' do
-    b1 = Prawn::AutoLayout::Bounds.new(1, 2, 3, 4)
-    b2 = b1.scale_width(0.5)
-    b1.width.should eq(3)
-    b2.width.should eq(1.5)
-  end
-end
-
-describe 'Bounds', '#move_right' do
-  it 'should return a new Bounds instance shifted right by its width' do
-    b1 = Prawn::AutoLayout::Bounds.new(1, 2, 3, 4)
-    b2 = b1.move_right
-    b1.left.should eq(1)
-    b2.left.should eq(4)
-  end
-end
-
-describe 'Bounds', '#top_left' do
-  it 'should return the top left point' do
-    b = Prawn::AutoLayout::Bounds.new(2, 1, 3, 4)
-    b.top_left.should eq([2, 1])
-  end
-end
-
-describe 'Bound', '#move_down' do
-  it 'should return a new Bounds instance shifted down by its height' do
-    b1 = Prawn::AutoLayout::Bounds.new(2, 10, 3, 4)
-    b2 = b1.move_down
-    b1.top.should eq(10)
-    b2.top.should eq(6)
-  end
-end
-
-describe 'Bounds', '.from_document' do
-  it 'should create an instance that according to the document' 's bounds' do
-    doc = mock_document(1, 2, 3, 4)
-    b   = Prawn::AutoLayout::Bounds.for_document(doc)
-    b.left.should eq(1)
-    b.top.should eq(2)
-    b.width.should eq(3)
-    b.height.should eq(4)
-  end
-end
-
-describe 'Engine' do
-  it 'should layout two frames evenly across the available width' do
-    document = mock_document(0, 100, 100, 100)
-
-    document.should_receive(:bounding_box).with([0, 100], { width: 100, height: 100 }).and_yield
-    document.should_receive(:bounding_box).with([0, 100], { width: 50, height: 100 }).and_yield
-    document.should_receive(:bounding_box).with([50, 100], { width: 50, height: 100 }).and_yield
-
-    Prawn::AutoLayout::Engine.new(document) do |l|
-      l.frame do
+      before(:each) do
+        @sut = Bounds.new(1, 2, 3, 4)
       end
-      l.frame do
-      end
-    end
-  end
 
-  it 'should layout nested frames evenly across the available width' do
-    document = mock_document(0, 100, 100, 100)
-
-    document.should_receive(:bounding_box).with([0, 100], { width: 100, height: 100 }).and_yield
-
-    document.should_receive(:bounding_box).with([0, 100], { width: 50, height: 100 }).and_yield
-    document.should_receive(:bounding_box).with([0, 100], { width: 25, height: 100 }).and_yield
-    document.should_receive(:bounding_box).with([25, 100], { width: 25, height: 100 }).and_yield
-
-    document.should_receive(:bounding_box).with([50, 100], { width: 50, height: 100 }).and_yield
-    document.should_receive(:bounding_box).with([0, 100], { width: 25, height: 100 }).and_yield
-    document.should_receive(:bounding_box).with([25, 100], { width: 25, height: 100 }).and_yield
-
-    Prawn::AutoLayout::Engine.new(document) do |l|
-      l.frame do
-        l.frame do
-        end
-        l.frame do
+      describe '#initialize' do
+        it 'should initialize a Bounds instance' do
+          @sut.left.should eq(1)
+          @sut.top.should eq(2)
+          @sut.width.should eq(3)
+          @sut.height.should eq(4)
         end
       end
-      l.frame do
-        l.frame do
+
+      describe '#reset_origin' do
+        it 'should return a new instance with the left coordinate set to 0 and the top coordinate set to the height' do
+          b = @sut.reset_origin
+          @sut.left.should eq(1)
+          b.left.should eq(0)
+          b.top.should eq(4)
         end
-        l.frame do
+      end
+
+      describe '#scale_width' do
+        it 'should return a new instance with its width scaled by a factor' do
+          b = @sut.scale_width(0.5)
+          @sut.width.should eq(3)
+          b.width.should eq(1.5)
+        end
+      end
+
+      describe '#move_right' do
+        it 'should return a new Bounds instance shifted right by its width' do
+          b = @sut.move_right
+          @sut.left.should eq(1)
+          b.left.should eq(4)
+        end
+      end
+
+      describe '#top_left' do
+        it 'should return the top left point' do
+          @sut.top_left.should eq([1, 2])
+        end
+      end
+
+      describe '#move_down' do
+        it 'should return a new Bounds instance shifted down by its height' do
+          b1 = Bounds.new(2, 10, 3, 4)
+          b2 = b1.move_down
+          b1.top.should eq(10)
+          b2.top.should eq(6)
+        end
+      end
+
+      describe '.from_document' do
+        it "should create an instance according to the document's bounds" do
+          doc = mock_document(1, 2, 3, 4)
+          b   = Bounds.for_document(doc)
+          b.left.should eq(1)
+          b.top.should eq(2)
+          b.width.should eq(3)
+          b.height.should eq(4)
         end
       end
     end
+
+    describe Engine do
+      it 'should layout two frames evenly across the available width' do
+        document = mock_document(0, 100, 100, 100)
+
+        document.should_receive(:bounding_box).with([0, 100], { width: 100, height: 100 }).and_yield
+        document.should_receive(:bounding_box).with([0, 100], { width: 50, height: 100 }).and_yield
+        document.should_receive(:bounding_box).with([50, 100], { width: 50, height: 100 }).and_yield
+
+        Prawn::AutoLayout::Engine.new(document) do |l|
+          l.frame do
+          end
+          l.frame do
+          end
+        end
+      end
+
+      it 'should layout nested frames evenly across the available width' do
+        document = mock_document(0, 100, 100, 100)
+
+        document.should_receive(:bounding_box).with([0, 100], { width: 100, height: 100 }).and_yield
+
+        document.should_receive(:bounding_box).with([0, 100], { width: 50, height: 100 }).and_yield
+        document.should_receive(:bounding_box).with([0, 100], { width: 25, height: 100 }).and_yield
+        document.should_receive(:bounding_box).with([25, 100], { width: 25, height: 100 }).and_yield
+
+        document.should_receive(:bounding_box).with([50, 100], { width: 50, height: 100 }).and_yield
+        document.should_receive(:bounding_box).with([0, 100], { width: 25, height: 100 }).and_yield
+        document.should_receive(:bounding_box).with([25, 100], { width: 25, height: 100 }).and_yield
+
+        Engine.new(document) do |l|
+          l.frame do
+            l.frame do
+            end
+            l.frame do
+            end
+          end
+          l.frame do
+            l.frame do
+            end
+            l.frame do
+            end
+          end
+        end
+      end
+    end
+
+
   end
 end

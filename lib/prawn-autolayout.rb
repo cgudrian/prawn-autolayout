@@ -1,6 +1,6 @@
-require 'prawn-autolayout/frame.rb'
-require 'prawn-autolayout/bounds.rb'
-require 'prawn-autolayout/engine.rb'
+require_relative 'prawn-autolayout/frame.rb'
+require_relative 'prawn-autolayout/bounds.rb'
+require_relative 'prawn-autolayout/engine.rb'
 
 module Prawn
   class Document
