@@ -1,68 +1,106 @@
-require_relative 'prawn-autolayout/frame.rb'
-require_relative 'prawn-autolayout/bounds.rb'
-require_relative 'prawn-autolayout/layouter.rb'
-
-class Frame
-  def initialize(bounds, &block)
-    @bounds = bounds
-    @contents = block
-  end
-end
-
-class Container < Frame
-  def initialize(bounds, &block)
-    super(bounds, &block)
-    @children = []
-  end
-
-  def columns
-    @children << Container.new(@bounds, &block)
-  end
-
-  def rows
-    @children << Container.new(@bounds, &block)
-  end
-
-  def frame
-    @children << Frame.new(@bounds, &block)
-  end
-end
-
 module Prawn
+  module AutoLayout
+
+    class FrameLayouter
+      def initialize(document, &block)
+        @document = document
+        @contents = block
+      end
+
+      def layout(bounds)
+        within_bounding_box(bounds) do
+          do_layout(bounds)
+        end
+      end
+
+      private
+
+      def do_layout(bounds)
+        @contents.call
+      end
+
+      def within_bounding_box(bounds, &block)
+        @document.bounding_box(bounds.top_left, width: bounds.width, height: bounds.height, &block)
+      end
+    end
+
+    class ContainerLayouter < FrameLayouter
+      def initialize(document, &block)
+        super(document, &block)
+        @layouters = []
+      end
+
+      def columns(&block)
+        @layouters << ColumnsLayouter.new(@document, &block)
+      end
+
+      def rows(&block)
+        @layouters << RowsLayouter.new(@document, &block)
+      end
+
+      def frame(&block)
+        @layouters << FrameLayouter.new(@document, &block)
+      end
+
+      private
+
+      def do_layout(bounds)
+        super(bounds)
+        @layouters.each { |l| l.layout(bounds) }
+      end
+    end
+
+    class ColumnsLayouter < ContainerLayouter
+
+    end
+
+    class RowsLayouter < ContainerLayouter
+
+    end
+
+    module Extensions
+      def columns(&block)
+        @current_layouter.columns(&block)
+      end
+
+      def rows(&block)
+        @current_layouter.rows(&block)
+      end
+
+      def frame(&block)
+        @current_layouter.frame(&block)
+      end
+
+      private
+
+      def layout(bounds)
+        @current_layouter.layout(bounds)
+      end
+
+      def init_layout(&block)
+        @current_layouter = ContainerLayouter.new(self, &block)
+      end
+    end
+  end
+
   class Document
-    def auto_layout(&content_block)
-      AutoLayout::Layouter.new(self, &content_block)
-    end
 
-    def columns(&block)
-      current_frame.columns do |c|
-        within_frame(c, &block)
-      end
-    end
-
-    def rows(&block)
-      current_frame.rows do |c|
-        within_frame(c, &block)
-      end
-    end
-
-    def frame(&block)
-      current_frame.frame do |c|
-        within_frame(c, &block)
+    def self.generate_with_autolayout(filename, options={}, &block)
+      generate(filename, options) do
+        if block
+          class << self
+            include AutoLayout::Extensions
+          end
+          init_layout do
+            block.arity < 1 ? instance_eval(&block) : block[self]
+          end
+          layout(bounds)
+        end
       end
     end
 
     private
 
-    def current_frame
-      @frame ||= Container.new(bounds)
-    end
-
-    def within_frame(new_frame)
-      old_frame, @frame = @frame, new_frame
-      yield
-    ensure
-      @frame = old_frame
-    end
   end
+
 end
