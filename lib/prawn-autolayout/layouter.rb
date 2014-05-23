@@ -2,7 +2,7 @@ require_relative 'frame'
 
 module Prawn
   module AutoLayout
-    class Engine
+    class Layouter
       def initialize(document, &content_block)
         @document      = document
         @current_frame = create_root_frame

@@ -70,7 +70,7 @@ module Prawn
       end
     end
 
-    describe Engine do
+    describe Layouter do
       it 'should layout two frames evenly across the available width' do
         document = mock_document(0, 100, 100, 100)
 
@@ -78,7 +78,7 @@ module Prawn
         document.should_receive(:bounding_box).with([0, 100], { width: 50, height: 100 }).and_yield
         document.should_receive(:bounding_box).with([50, 100], { width: 50, height: 100 }).and_yield
 
-        Prawn::AutoLayout::Engine.new(document) do |l|
+        Prawn::AutoLayout::Layouter.new(document) do |l|
           l.columns do
             l.frame do
             end
@@ -101,7 +101,7 @@ module Prawn
         document.should_receive(:bounding_box).with([0, 100], { width: 25, height: 100 }).and_yield
         document.should_receive(:bounding_box).with([25, 100], { width: 25, height: 100 }).and_yield
 
-        Engine.new(document) do |l|
+        Layouter.new(document) do |l|
           l.columns do
             l.frame do
               l.frame do
