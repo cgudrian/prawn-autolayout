@@ -79,9 +79,11 @@ module Prawn
         document.should_receive(:bounding_box).with([50, 100], { width: 50, height: 100 }).and_yield
 
         Prawn::AutoLayout::Engine.new(document) do |l|
-          l.frame do
-          end
-          l.frame do
+          l.columns do
+            l.frame do
+            end
+            l.frame do
+            end
           end
         end
       end
@@ -100,16 +102,18 @@ module Prawn
         document.should_receive(:bounding_box).with([25, 100], { width: 25, height: 100 }).and_yield
 
         Engine.new(document) do |l|
-          l.frame do
+          l.columns do
             l.frame do
+              l.frame do
+              end
+              l.frame do
+              end
             end
             l.frame do
-            end
-          end
-          l.frame do
-            l.frame do
-            end
-            l.frame do
+              l.frame do
+              end
+              l.frame do
+              end
             end
           end
         end
