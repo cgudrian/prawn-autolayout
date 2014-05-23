@@ -25,6 +25,10 @@ module Prawn
         yield
       end
 
+      def rows
+        yield
+      end
+
       private
 
       def create_root_frame
