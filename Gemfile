@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem 'prawn', "~> 1.0"
+gem 'prawn', "~> 2.0"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
