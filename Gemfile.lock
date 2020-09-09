@@ -49,6 +49,7 @@ GEM
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.13.1)
+    ffi (1.13.1-x86-mingw32)
     git (1.7.0)
       rchardet (~> 1.8)
     github_api (0.19.0)
@@ -79,6 +80,8 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     nokogiri (1.10.10)
+      mini_portile2 (~> 2.4.0)
+    nokogiri (1.10.10-x86-mingw32)
       mini_portile2 (~> 2.4.0)
     oauth2 (1.4.4)
       faraday (>= 0.8, < 2.0)
@@ -124,6 +127,7 @@ GEM
 
 PLATFORMS
   ruby
+  x86-mingw32
 
 DEPENDENCIES
   bundler (~> 2.0)
