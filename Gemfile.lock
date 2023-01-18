@@ -104,7 +104,7 @@ GEM
       thread_safe
     psych (3.2.0)
     racc (1.5.2)
-    rack (2.2.3)
+    rack (2.2.6.2)
     rake (13.0.1)
     rchardet (1.8.0)
     rdoc (6.3.1)
